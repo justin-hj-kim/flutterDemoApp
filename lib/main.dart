@@ -1,4 +1,3 @@
-// Part 1: Theme & App Initialization
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -513,6 +512,32 @@ class _SubmitReviewPageState extends State<SubmitReviewPage> {
 class ReviewsPage extends StatelessWidget {
   const ReviewsPage({super.key});
 
+  Future<bool> _showDeleteConfirmation(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Review'),
+        content: const Text('Are you sure you want to delete this review?'),
+        actions: [
+          FilledButton.tonal(
+            child: const Text('Cancel'),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+          ),
+          ElevatedButton(
+            child: const Text('Delete'),
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+          )
+        ],
+      ),
+    );
+
+    return confirmed ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme;
@@ -525,15 +550,38 @@ class ReviewsPage extends StatelessWidget {
         separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (_, i) {
           final r = globalReviews[i];
-          return Card(
-            child: ListTile(
-              leading: const CircleAvatar(
-                backgroundColor: Colors.brown,
-                child: Icon(Icons.person, color: Colors.white),
+          return Dismissible(
+            key: Key('review_$i'),
+            background: Container(
+              color: Colors.red,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Icon(Icons.delete, color: Colors.white),
+                  ),
+                  Text('Delete', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
+                ],
               ),
-              title: Text('${r['name']} (${r['rating']}⭐)', style: theme.titleSmall),
-              subtitle: Text('${r['content']}\nRecommend: ${r['recommend']}'),
-              isThreeLine: true,
+            ),
+            direction: DismissDirection.endToStart,
+            confirmDismiss: (direction) async {
+              return await _showDeleteConfirmation(context);
+            },
+            onDismissed: (direction) {
+              globalReviews.removeAt(i);
+            },
+            child: Card(
+              child: ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: Colors.brown,
+                  child: Icon(Icons.person, color: Colors.white),
+                ),
+                title: Text('${r['name']} (${r['rating']}⭐)', style: theme.titleSmall),
+                subtitle: Text('${r['content']}\nRecommend: ${r['recommend']}'),
+                isThreeLine: true,
+              ),
             ),
           );
         },
@@ -541,6 +589,7 @@ class ReviewsPage extends StatelessWidget {
     );
   }
 }
+
 
 // Tips Page
 class TipsPage extends StatelessWidget {
@@ -561,17 +610,30 @@ class TipsPage extends StatelessWidget {
       appBar: AppBar(title: const Text('Brewing Tips')),
       body: PageView.builder(
         itemCount: tips.length,
-        controller: PageController(viewportFraction: 0.9),
+        controller: PageController(viewportFraction: 0.8),
         itemBuilder: (_, i) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 8),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
           child: Card(
+            elevation: 6,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            color: Colors.brown.shade100,
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Text(
-                  tips[i],
-                  style: theme.headlineSmall?.copyWith(fontWeight: FontWeight.w500),
-                  textAlign: TextAlign.center,
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      tips[i],
+                      style: theme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.brown.shade900,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    Icon(Icons.local_cafe, size: 48, color: Colors.brown.shade700),
+                  ],
                 ),
               ),
             ),
@@ -581,4 +643,5 @@ class TipsPage extends StatelessWidget {
     );
   }
 }
+
 
