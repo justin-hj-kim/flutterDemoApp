@@ -12,30 +12,44 @@ class CoffeeExplorerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final baseTheme = ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.brown,
-        brightness: Brightness.light,
+      colorScheme: const ColorScheme.light(
+        primary: Color(0xFFFF6B00), // SmartBear orange
+        secondary: Color(0xFF0066B3), // SmartBear blue
+        surface: Color(0xFFF6F6F6), // light grey
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+        onSurface: Color(0xFF222222),
       ),
       scaffoldBackgroundColor: Colors.brown.shade50,
-      textTheme: GoogleFonts.poppinsTextTheme(),
+      textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme,),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Color(0xFFE1E1E1), width: 2),
+        ),
+        labelStyle: const TextStyle(fontWeight: FontWeight.bold),
       ),
-      appBarTheme: AppBarTheme(
-        backgroundColor: Colors.brown.shade100,
-        foregroundColor: Colors.brown.shade900,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.white,
+        foregroundColor: Color(0xFF222222),
         centerTitle: true,
-        titleTextStyle: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600),
+        elevation: 4,
+        titleTextStyle: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF222222),
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.brown,
+          backgroundColor: const Color(0xFFFF6B00),
           foregroundColor: Colors.white,
-          textStyle: const TextStyle(fontWeight: FontWeight.w600),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -47,8 +61,12 @@ class CoffeeExplorerApp extends StatelessWidget {
         ),
       ),
       cardTheme: CardTheme(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 4,
+        color: Colors.white,
+        elevation: 6,
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
       ),
       chipTheme: ChipThemeData.fromDefaults(
         secondaryColor: Colors.brown.shade400,
@@ -92,7 +110,7 @@ class LoginPage extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundColor: Colors.brown,
+                backgroundColor: Color(0xFFFF6B00),
                 child: Icon(Icons.coffee, color: Colors.white, size: 36),
               ),
               const SizedBox(height: 24),
