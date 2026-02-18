@@ -102,60 +102,114 @@ class LoginPage extends StatelessWidget {
     final theme = Theme.of(context).textTheme;
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: Color(0xFFFF6B00),
-                child: Icon(Icons.coffee, color: Colors.white, size: 36),
-              ),
-              const SizedBox(height: 24),
-              Text('Coffee Explorer', style: theme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 32),
-              Card(
-                margin: EdgeInsets.zero,
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(children: [
-                    TextField(
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: Icon(Icons.email),
-                      ),
+              // Logo Section
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      child: Icon(Icons.coffee, color: Colors.white, size: 40),
                     ),
                     const SizedBox(height: 16),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        prefixIcon: Icon(Icons.lock),
+                    Text('Coffee Explorer', style: theme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.onSurface)),
+                  ],
+                ),
+              ),
+
+              // Login Form
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text('Welcome back!', style: theme.titleLarge?.copyWith(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
+                      const SizedBox(height: 24),
+                      // Email Field
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          hintText: 'Enter your email',
+                          prefixIcon: const Icon(Icons.email),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {},
-                        child: const Text('Forgot Password?'),
+                      const SizedBox(height: 16),
+
+                      // Password Field
+                      TextFormField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          hintText: 'Enter your password',
+                          prefixIcon: const Icon(Icons.lock),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 48,
-                      child: ElevatedButton(
+                      const SizedBox(height: 8),
+
+                      // Forgot Password
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {},
+                          style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),
+                          child: const Text('Forgot Password?'),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Login Button
+                      ElevatedButton(
                         onPressed: () {
                           Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (_) => const HomePage()));
+                              MaterialPageRoute(builder: (_) => const HomePage()));
                         },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          textStyle: const TextStyle(fontSize: 18),
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
                         child: const Text('Login'),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Sign-Up Section (Optional)
+              Padding(
+                padding: const EdgeInsets.only(top: 24.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Don't have an account?", style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8))),
+                    TextButton(
+                      onPressed: () {
+                        // Navigate to sign-up page
+                      },
+                      style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.secondary),
+                      child: const Text('Sign up'),
                     ),
-                  ]),
+                  ],
                 ),
               ),
             ],
@@ -175,8 +229,12 @@ class HomePage extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: Text('Coffee Explorer'),
+        title: const Text('Coffee Explorer'),
+        backgroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.grey.withOpacity(0.5),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -209,6 +267,9 @@ class HomePage extends StatelessWidget {
             _HomeCard(title: 'Brewing Tips', icon: Icons.local_cafe, onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const TipsPage()));
             }),
+            _HomeCard(title: 'Gesture Demo', icon: Icons.touch_app, onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const GestureDemoPage()));
+            }),
           ],
         ),
       ),
@@ -228,17 +289,20 @@ class _HomeCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Card(
+      elevation: 4,
+      shadowColor: Colors.grey.withOpacity(0.3),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 40, color: Colors.brown.shade700),
+              Icon(icon, size: 40, color: Theme.of(context).colorScheme.primary),
               const SizedBox(height: 12),
-              Text(title, textAlign: TextAlign.center, style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+              Text(title, textAlign: TextAlign.center, style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
             ],
           ),
         ),
@@ -331,15 +395,25 @@ class _SearchPageState extends State<SearchPage> {
     }).toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Search Coffee Shops')),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(
+        title: const Text('Search Coffee Shops'),
+        backgroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.grey.withOpacity(0.5),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(
-              decoration: const InputDecoration(
+            TextFormField(
+              decoration: InputDecoration(
                 labelText: 'Search',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               ),
               onChanged: (value) => setState(() => query = value),
             ),
@@ -358,6 +432,10 @@ class _SearchPageState extends State<SearchPage> {
                           sel ? selectedTags.add(tag) : selectedTags.remove(tag);
                         });
                       },
+                      backgroundColor: Colors.grey.shade200,
+                      selectedColor: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+                      checkmarkColor: Theme.of(context).colorScheme.onSecondary,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     ),
                   );
                 }).toList(),
@@ -368,11 +446,15 @@ class _SearchPageState extends State<SearchPage> {
               child: ListView.builder(
                 itemCount: filtered.length,
                 itemBuilder: (_, i) => Card(
+                  elevation: 2,
+                  shadowColor: Colors.grey.withOpacity(0.2),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(16),
-                    leading: const Icon(Icons.local_cafe, size: 32, color: Colors.brown),
-                    title: Text(filtered[i]['name'], style: theme.titleMedium),
+                    leading: Icon(Icons.local_cafe, size: 32, color: Theme.of(context).colorScheme.primary),
+                    title: Text(filtered[i]['name'], style: theme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface)),
                     subtitle: Text(filtered[i]['desc']),
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -401,36 +483,49 @@ class CoffeeShopDetailPage extends StatelessWidget {
     final theme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: Text(shop['name'])),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(
+        title: Text(shop['name']),
+        backgroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.grey.withOpacity(0.5),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Card(
+          elevation: 2,
+          shadowColor: Colors.grey.withOpacity(0.2),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(shop['desc'], style: theme.titleMedium),
+                Text(shop['desc'], style: theme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface)),
                 const SizedBox(height: 16),
                 Wrap(
                   spacing: 8,
                   children: (shop['tags'] as List<String>)
-                      .map((tag) => Chip(label: Text(tag)))
+                      .map((tag) => Chip(
+                    label: Text(tag),
+                    backgroundColor: Colors.grey.shade200,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ))
                       .toList(),
                 ),
                 const SizedBox(height: 24),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.access_time, color: Colors.brown),
-                  title: const Text('Hours'),
-                  subtitle: Text(shop['hours']),
+                  leading: Icon(Icons.access_time, color: Theme.of(context).colorScheme.primary),
+                  title: Text('Hours',  style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+                  subtitle: Text(shop['hours'],  style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
                 ),
                 const Divider(),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: const Icon(Icons.menu_book, color: Colors.brown),
-                  title: const Text('Popular Menu'),
-                  subtitle: Text((shop['menu'] as List<String>).join(', ')),
+                  leading: Icon(Icons.menu_book, color: Theme.of(context).colorScheme.primary),
+                  title: Text('Popular Menu',  style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+                  subtitle: Text((shop['menu'] as List<String>).join(', '),  style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
                 ),
               ],
             ),
@@ -459,24 +554,45 @@ class _SubmitReviewPageState extends State<SubmitReviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Submit Review')),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(
+        title: const Text('Submit Review'),
+        backgroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.grey.withOpacity(0.5),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Card(
+          elevation: 2,
+          shadowColor: Colors.grey.withOpacity(0.2),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Form(
               key: _formKey,
               child: ListView(children: [
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Your Name'),
+                  decoration: InputDecoration(
+                    labelText: 'Your Name',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    filled: true,
+                    fillColor: Colors.grey.shade100,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  ),
                   onSaved: (v) => name = v ?? '',
                   validator: (v) => v == null || v.isEmpty ? 'Enter your name' : null,
                 ),
                 const SizedBox(height: 12),
                 DropdownButtonFormField<String>(
                   value: rating,
-                  decoration: const InputDecoration(labelText: 'Rating'),
+                  decoration: InputDecoration(
+                    labelText: 'Rating',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    filled: true,
+                    fillColor: Colors.grey.shade100,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  ),
                   items: ['5', '4', '3', '2', '1']
                       .map((r) => DropdownMenuItem(value: r, child: Text(r)))
                       .toList(),
@@ -484,7 +600,13 @@ class _SubmitReviewPageState extends State<SubmitReviewPage> {
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: 'Your Review'),
+                  decoration: InputDecoration(
+                    labelText: 'Your Review',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    filled: true,
+                    fillColor: Colors.grey.shade100,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                  ),
                   maxLines: 3,
                   onSaved: (v) => content = v ?? '',
                 ),
@@ -492,6 +614,11 @@ class _SubmitReviewPageState extends State<SubmitReviewPage> {
                 CheckboxListTile(
                   title: const Text('Would Recommend'),
                   value: recommend,
+                  activeColor: Theme.of(context).colorScheme.secondary,
+                  contentPadding: EdgeInsets.zero,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  side: BorderSide(color: Colors.grey.shade400, width: 1.5),
                   onChanged: (v) => setState(() => recommend = v ?? false),
                 ),
                 const SizedBox(height: 24),
@@ -499,6 +626,11 @@ class _SubmitReviewPageState extends State<SubmitReviewPage> {
                   width: double.infinity,
                   height: 48,
                   child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Colors.white,
+                    ),
                     onPressed: () {
                       if (_formKey.currentState?.validate() ?? false) {
                         _formKey.currentState?.save();
@@ -537,19 +669,22 @@ class ReviewsPage extends StatelessWidget {
         title: const Text('Delete Review'),
         content: const Text('Are you sure you want to delete this review?'),
         actions: [
-          FilledButton.tonal(
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: Colors.grey),
             child: const Text('Cancel'),
             onPressed: () {
               Navigator.of(context).pop(false);
             },
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
             child: const Text('Delete'),
             onPressed: () {
               Navigator.of(context).pop(true);
             },
           )
         ],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
 
@@ -561,7 +696,13 @@ class ReviewsPage extends StatelessWidget {
     final theme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Recent Reviews')),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(
+        title: const Text('Recent Reviews'),
+        backgroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.grey.withOpacity(0.5),
+      ),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: globalReviews.length,
@@ -571,15 +712,15 @@ class ReviewsPage extends StatelessWidget {
           return Dismissible(
             key: Key('review_$i'),
             background: Container(
-              color: Colors.red,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.only(right: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Expanded(
-                    flex: 2,
-                    child: Icon(Icons.delete, color: Colors.white),
-                  ),
-                  Text('Delete', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white)),
+                  Icon(Icons.delete, color: Colors.white),
                 ],
               ),
             ),
@@ -591,13 +732,16 @@ class ReviewsPage extends StatelessWidget {
               globalReviews.removeAt(i);
             },
             child: Card(
+              elevation: 2,
+              shadowColor: Colors.grey.withOpacity(0.2),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               child: ListTile(
-                leading: const CircleAvatar(
-                  backgroundColor: Colors.brown,
-                  child: Icon(Icons.person, color: Colors.white),
+                leading: CircleAvatar(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  child: const Icon(Icons.person, color: Colors.white),
                 ),
-                title: Text('${r['name']} (${r['rating']}⭐)', style: theme.titleSmall),
-                subtitle: Text('${r['content']}\nRecommend: ${r['recommend']}'),
+                title: Text('${r['name']} (${r['rating']}⭐)', style: theme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface)),
+                subtitle: Text('${r['content']}\nRecommend: ${r['recommend']}', style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8))),
                 isThreeLine: true,
               ),
             ),
@@ -625,16 +769,23 @@ class TipsPage extends StatelessWidget {
     final theme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Brewing Tips')),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(
+        title: const Text('Brewing Tips'),
+        backgroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.grey.withOpacity(0.5),
+      ),
       body: PageView.builder(
         itemCount: tips.length,
         controller: PageController(viewportFraction: 0.8),
         itemBuilder: (_, i) => Padding(
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
           child: Card(
-            elevation: 6,
+            elevation: 2,
+            shadowColor: Colors.grey.withOpacity(0.2),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            color: Colors.brown.shade100,
+            color: Colors.white,
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
@@ -645,12 +796,12 @@ class TipsPage extends StatelessWidget {
                       tips[i],
                       style: theme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: Colors.brown.shade900,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
-                    Icon(Icons.local_cafe, size: 48, color: Colors.brown.shade700),
+                    Icon(Icons.local_cafe, size: 48, color: Theme.of(context).colorScheme.primary),
                   ],
                 ),
               ),
@@ -662,4 +813,300 @@ class TipsPage extends StatelessWidget {
   }
 }
 
+// Gesture Demo Page
+class GestureDemoPage extends StatefulWidget {
+  const GestureDemoPage({super.key});
 
+  @override
+  State<GestureDemoPage> createState() => _GestureDemoPageState();
+}
+
+class _GestureDemoPageState extends State<GestureDemoPage> {
+  String message = 'Try the gestures below!';
+  int doubleTapCount = 0;
+  int longPressCount = 0;
+  Color box1Color = Colors.blue.shade300;
+  Color box2Color = Colors.green.shade300;
+
+  void _handleDoubleTap() {
+    setState(() {
+      doubleTapCount++;
+      message = 'Double Tap detected! Count: $doubleTapCount';
+      box1Color = Colors.primaries[doubleTapCount % Colors.primaries.length].shade300;
+    });
+  }
+
+  void _handleLongPress() {
+    setState(() {
+      longPressCount++;
+      message = 'Long Press detected! Count: $longPressCount';
+      box2Color = Colors.primaries[longPressCount % Colors.primaries.length].shade300;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context).textTheme;
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(
+        title: const Text('Gesture Demo'),
+        backgroundColor: Colors.white,
+        elevation: 2,
+        shadowColor: Colors.grey.withOpacity(0.5),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Status Message Card
+            Card(
+              elevation: 4,
+              shadowColor: Colors.grey.withOpacity(0.3),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    Icon(Icons.touch_app, size: 48, color: Theme.of(context).colorScheme.primary),
+                    const SizedBox(height: 12),
+                    Text(
+                      message,
+                      style: theme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+
+            // Double Tap Demo
+            Text(
+              'Double Tap Demo',
+              style: theme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Quickly tap twice on the box below',
+              style: theme.bodyMedium?.copyWith(color: Colors.grey.shade600),
+            ),
+            const SizedBox(height: 16),
+            GestureDetector(
+              onDoubleTap: _handleDoubleTap,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: 180,
+                decoration: BoxDecoration(
+                  color: box1Color,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.touch_app, size: 48, color: Colors.white),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Double Tap Me!',
+                        style: theme.headlineSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Count: $doubleTapCount',
+                        style: theme.titleMedium?.copyWith(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+
+            // Long Press Demo
+            Text(
+              'Long Press Demo',
+              style: theme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Tap and hold the box below for 1 second',
+              style: theme.bodyMedium?.copyWith(color: Colors.grey.shade600),
+            ),
+            const SizedBox(height: 16),
+            GestureDetector(
+              onLongPress: _handleLongPress,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: 180,
+                decoration: BoxDecoration(
+                  color: box2Color,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.timer, size: 48, color: Colors.white),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Hold Me!',
+                        style: theme.headlineSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Count: $longPressCount',
+                        style: theme.titleMedium?.copyWith(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+
+            // Statistics Card
+            Card(
+              elevation: 2,
+              shadowColor: Colors.grey.withOpacity(0.2),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Gesture Statistics',
+                      style: theme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _StatItem(
+                          icon: Icons.touch_app,
+                          label: 'Double Taps',
+                          count: doubleTapCount,
+                          color: Colors.blue,
+                        ),
+                        _StatItem(
+                          icon: Icons.timer,
+                          label: 'Long Presses',
+                          count: longPressCount,
+                          color: Colors.green,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Reset Button
+            SizedBox(
+              height: 48,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  setState(() {
+                    doubleTapCount = 0;
+                    longPressCount = 0;
+                    message = 'Counters reset! Try again!';
+                    box1Color = Colors.blue.shade300;
+                    box2Color = Colors.green.shade300;
+                  });
+                },
+                icon: const Icon(Icons.refresh),
+                label: const Text('Reset Counters'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final int count;
+  final Color color;
+
+  const _StatItem({
+    required this.icon,
+    required this.label,
+    required this.count,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context).textTheme;
+
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: color, size: 32),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: theme.bodySmall?.copyWith(color: Colors.grey.shade600),
+        ),
+        Text(
+          '$count',
+          style: theme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+      ],
+    );
+  }
+}
